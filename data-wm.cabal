@@ -16,6 +16,11 @@ build-type:          Simple
 cabal-version:       >=1.8
 
 library
-  -- exposed-modules:     
-  -- other-modules:       
+  hs-source-dirs:    src
+  exposed-modules:     Data.WM
+                     , Data.WM.FloatStack
+                     , Data.WM.Screen
+                     , Data.WM.TilingStack
+                     , Data.WM.Window
+                     , Data.WM.Workspace
   build-depends:       base ==4.5.*
