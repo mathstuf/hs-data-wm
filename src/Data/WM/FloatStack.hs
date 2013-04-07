@@ -11,6 +11,7 @@
 
 module Data.WM.FloatStack
     ( FloatStack
+    , fsNew
     ) where
 
 import Data.WM.Window
@@ -21,6 +22,10 @@ data FloatStack w = FloatStack
     , fsPrevious  :: [w]
     , fsNext      :: [w]
     } deriving (Show, Read, Eq)
+
+fsNew :: [w] -> Maybe (FloatStack w)
+fsNew []      = Nothing
+fsNew (wf:ws) = Just $ FloatStack wf [] ws
 
 instance WindowStack FloatStack where
     wsFocused  = fsFocused

@@ -11,6 +11,7 @@
 
 module Data.WM.TilingStack
     ( TilingStack
+    , tsNew
     , tsSwapFocus
     ) where
 
@@ -52,6 +53,12 @@ tsSwapFocus ts =
         False -> case tsFloating ts of
                     Just fs -> ts { tsFloatFocus = True }
                     Nothing -> ts
+
+tsNew :: [w] -> Maybe (TilingStack w)
+tsNew []      = Nothing
+tsNew (wf:ws) = Just $ TilingStack wf [] ws Nothing False
+
+-- Helper functions
 
 abort :: String -> a
 abort = error . ("TilingStack: " ++)
