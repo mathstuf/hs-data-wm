@@ -19,9 +19,13 @@ module Data.WM
     , wmEmpty
     , wmViewWorkspace
     , wmFocusWorkspace
+    , wmWithCurrentStack
+    , wmModifyCurrentStack
+    , wmMaybeModifyCurrentStack
     ) where
 
 import Data.List
+import Data.Maybe
 
 import Data.WM.Window
 import Data.WM.Workspace
@@ -87,6 +91,23 @@ wmFocusWorkspace tag wm
         current = wmCurrent wm
         visible = wmVisible wm
         hidden  = wmHidden wm
+
+-- Higher order functions
+
+wmWithCurrentStack :: a -> (s -> a) -> WM t l w s ctx -> a
+wmWithCurrentStack def f =
+    maybe def f . wkStack . scrWorkspace . wmCurrent
+
+wmModifyCurrentStack :: Maybe s -> (s -> Maybe s) -> WM t l w s ctx -> WM t l w s ctx
+wmModifyCurrentStack def f wm =
+    wm { wmCurrent = current { scrWorkspace = wksp { wkStack = wmWithStack def f wm } } }
+    where
+        current = wmCurrent wm
+        wksp    = scrWorkspace current
+
+wmMaybeModifyCurrentStack :: (s -> s) -> WM t l w s ctx -> WM t l w s ctx
+wmMaybeModifyCurrentStack f =
+    wmModifyStack Nothing (Just . f)
 
 -- Helper functions
 
