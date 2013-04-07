@@ -9,8 +9,8 @@
 -- Portability :  portable, Haskell 98
 --
 
-module Data.WM.Workspace (
-      WindowStack(..)
+module Data.WM.Workspace
+    ( WindowStack(..)
     , Workspace(..)
     ) where
 
@@ -21,8 +21,8 @@ class WindowStack s where
     wsPrevious :: s w -> [w]
     wsNext     :: s w -> [w]
 
-data Workspace t l s = Workspace {
-      wkTag    :: !t
+data Workspace t l s = Workspace
+    { wkTag    :: !t
     , wkLayout :: l
     , wkStack  :: Maybe s
     } deriving (Show, Read, Eq)

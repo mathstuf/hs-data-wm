@@ -9,16 +9,16 @@
 -- Portability :  portable, Haskell 98
 --
 
-module Data.WM.TilingStack (
-      TilingStack
+module Data.WM.TilingStack
+    ( TilingStack
     , tsSwapFocus
     ) where
 
 import Data.WM.FloatStack
 import Data.WM.Workspace
 
-data TilingStack w = TilingStack {
-      tsFocus      :: !w
+data TilingStack w = TilingStack
+    { tsFocus      :: !w
     , tsPrevious   :: [w]
     , tsNext       :: [w]
     , tsFloating   :: Maybe (FloatStack w)

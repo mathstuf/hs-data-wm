@@ -9,13 +9,13 @@
 -- Portability :  portable, Haskell 98
 --
 
-module Data.WM.Window (
-      RationalRect(..)
+module Data.WM.Window
+    ( RationalRect(..)
     , Window(..)
     ) where
 
-data RationalRect = RationalRect {
-      rectTop      :: !Rational
+data RationalRect = RationalRect
+    { rectTop      :: !Rational
     , rectLeft     :: !Rational
     , rectWidth    :: !Rational
     , rectHeight   :: !Rational

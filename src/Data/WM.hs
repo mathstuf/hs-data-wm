@@ -9,16 +9,19 @@
 -- Portability :  portable, Haskell 98
 --
 
-module Data.WM (
-      WM(..)
+module Data.WM
+    ( WM(..)
+    , module Data.WM.Screen
+    , module Data.WM.Window
+    , module Data.WM.Workspace
     ) where
 
 import Data.WM.Window
 import Data.WM.Workspace
 import Data.WM.Screen
 
-data WM t l w s ctx = WM {
-      current :: !(Screen t l w s ctx)
-    , visible :: [Screen t l w s ctx]
-    , hidden  :: [Workspace t l w]
+data WM t l w s ctx = WM
+    { wmCurrent :: !(Screen t l w s ctx)
+    , wmVisible :: [Screen t l w s ctx]
+    , wmHidden  :: [Workspace t l s]
     } deriving (Show, Read, Eq)

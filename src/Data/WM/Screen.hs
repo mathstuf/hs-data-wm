@@ -9,14 +9,14 @@
 -- Portability :  portable, Haskell 98
 --
 
-module Data.WM.Screen (
-      Screen(..)
+module Data.WM.Screen
+    ( Screen(..)
     ) where
 
 import Data.WM.Workspace
 
-data Screen t l w s ctx = Screen {
-      workspace :: Workspace t l s
-    , screen    :: !s
-    , context   :: ctx
+data Screen t l w s ctx = Screen
+    { scrWorkspace :: Workspace t l s
+    , scrId        :: !s
+    , scrContext   :: ctx
     } deriving (Show, Read, Eq)

@@ -9,15 +9,15 @@
 -- Portability :  portable, Haskell 98
 --
 
-module Data.WM.FloatStack (
-      FloatStack
+module Data.WM.FloatStack
+    ( FloatStack
     ) where
 
 import Data.WM.Window
 import Data.WM.Workspace
 
-data FloatStack w = FloatStack {
-      fsFocused   :: !w
+data FloatStack w = FloatStack
+    { fsFocused   :: !w
     , fsPrevious  :: [w]
     , fsNext      :: [w]
     } deriving (Show, Read, Eq)
