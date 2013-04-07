@@ -17,7 +17,11 @@ module Data.WM
     , module Data.WM.Window
     , module Data.WM.Workspace
     , wmEmpty
+    , wmViewWorkspace
+    , wmFocusWorkspace
     ) where
+
+import Data.List
 
 import Data.WM.Window
 import Data.WM.Workspace
@@ -39,7 +43,55 @@ wmEmpty layout tags descs
         (seen, hidden) = splitAt (length descs) $ map (\t -> Workspace t layout Nothing) tags
         (cur:rest)     = [ Screen wksp id desc | (wksp, id, desc) <- zip3 seen [0 .. ] descs ]
 
+-- Operations
+
+wmViewWorkspace :: (Eq t, Eq s) => t -> WM t l w s ctx -> WM t l w s ctx
+wmViewWorkspace tag wm
+    -- Current tag?
+    | tag == wmFocusedTag wm =
+        wm
+    -- Visible on a screen?
+    | Just scr <- find ((tag ==) . screenTag) visible =
+        wm { wmCurrent = scr
+           , wmVisible = current : deleteBy (eq scrId) scr visible
+           }
+    -- Hidden?
+    | Just wksp <- find ((tag ==) . wkTag) hidden =
+        wm { wmCurrent = current { scrWorkspace = wksp }
+           , wmHidden = (scrWorkspace current) : deleteBy (eq wkTag) wksp hidden
+           }
+    -- Didn't find the tag.
+    | otherwise =
+        wm
+    where
+        eq f    = \x y -> f x == f y
+        current = wmCurrent wm
+        visible = wmVisible wm
+        hidden  = wmHidden wm
+
+wmFocusWorkspace :: (Eq t, Eq s) => t -> WM t l w s ctx -> WM t l w s ctx
+wmFocusWorkspace tag wm
+    -- Hidden already?
+    | any wkspTag hidden =
+        wmViewWorkspace tag wm
+    -- Focus the screen with the tag.
+    | Just scr <- find ((tag ==) . screenTag) visible =
+        wm { wmCurrent = current { scrWorkspace = scrWorkspace scr }
+           , wmVisible = scr : filter (not . wkspTag . scrWorkspace) visible
+           }
+    -- Didn't find the tag.
+    | otherwise =
+        wm
+    where
+        wkspTag = (tag ==) . wkTag
+        current = wmCurrent wm
+        visible = wmVisible wm
+        hidden  = wmHidden wm
+
 -- Helper functions
+
+screenTag :: Screen t l w s ctx -> t
+screenTag = wkTag . scrWorkspace
 
 abort :: String -> a
 abort = error . ("WM: " ++)
