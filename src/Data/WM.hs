@@ -22,6 +22,9 @@ module Data.WM
     , wmWithCurrentStack
     , wmModifyCurrentStack
     , wmMaybeModifyCurrentStack
+    , wmFocusedWindow
+    , wmFocusedTag
+    , wmFocusedScreen
     ) where
 
 import Data.List
@@ -108,6 +111,23 @@ wmModifyCurrentStack def f wm =
 wmMaybeModifyCurrentStack :: (s -> s) -> WM t l w s ctx -> WM t l w s ctx
 wmMaybeModifyCurrentStack f =
     wmModifyStack Nothing (Just . f)
+
+-- Query functions
+
+wmFocusedWindow :: (WindowStack s) => WM t l w (s w) ctx -> Maybe w
+wmFocusedWindow =
+    wmWithStack Nothing (Just . wsFocused)
+
+wmFocusedTag :: WM t l w s ctx -> t
+wmFocusedTag = screenTag . wmCurrent
+
+wmFocusedScreen :: WM t l w s ctx -> s
+wmFocusedScreen = scrId . wmCurrent
+
+wmScreenTag :: (Eq s) => s -> WM t l w s ctx -> Maybe t
+wmScreenTag sid wm =
+    listToMaybe [ wkTag wk | Screen wk s _ <- wmCurrent wm : wmVisible wm
+                           , s == sid ]
 
 -- Helper functions
 
